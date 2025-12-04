@@ -1,1 +1,45 @@
 
+---
+- name: Configure hostnames, interface descriptions, and banner
+  hosts: all
+  gather_facts: no
+
+  tasks:
+
+    # -------------------------
+    # 1. Set Hostnames
+    # -------------------------
+    - name: Set hostname based on inventory_hostname
+      cisco.ios.ios_config:
+        lines:
+          - "hostname {{ inventory_hostname }}"
+
+    # -------------------------
+    # 2. Configure Interface Descriptions
+    # -------------------------
+    - name: Configure interface descriptions
+      cisco.ios.ios_config:
+        lines: "{{ interface_descriptions[inventory_hostname] }}"
+      vars:
+        interface_descriptions:
+          Router1:
+            - interface e0/0
+            - description Connection to Switch1
+          Router2:
+            - interface et0/1
+            - description Connection to Switch1
+          Switch1:
+            - interface e0/0
+            - description Connection to Router1
+            - interface e0/1
+            - description Connection to Router2
+            - interface e0/2
+            - description Connection to Server
+
+    # -------------------------
+    # 3. Configure MOTD Banner
+    # -------------------------
+    - name: Configure Banner MOTD
+      cisco.ios.ios_config:
+        lines:
+          - banner motd "Unauthorized access is prohibited"
