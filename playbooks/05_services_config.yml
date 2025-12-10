@@ -1,1 +1,43 @@
+---
+- name: Configure NTP and Logging on Network Devices
+  hosts: all
+  gather_facts: no
+  connection: network_cli
+
+  vars:
+    ntp_server: 10.1.69.1   # Router1 as NTP server
+    logging_server: 10.1.69.1  # Can be same or different
+
+  tasks:
+
+    ###########################################################################
+    # Configure Router1 as NTP Server
+    ###########################################################################
+    - name: Configure Router1 as NTP server
+      ios_config:
+        lines:
+          - ntp master 1
+      when: inventory_hostname == "Router1"
+
+    ###########################################################################
+    # Configure NTP on all devices to sync with Router1
+    ###########################################################################
+    - name: Configure NTP on all devices
+      ios_config:
+        lines:
+          - ntp server {{ ntp_server }} prefer
+          - clock timezone CST -6
+      when: inventory_hostname != "Router1"
+
+    ###########################################################################
+    # Configure Logging on all devices
+    ###########################################################################
+    - name: Configure logging
+      ios_config:
+        lines:
+          - logging buffered 16384
+          - logging console
+          - logging monitor
+          - logging trap debugging
+          - logging host {{ logging_server }}
 
