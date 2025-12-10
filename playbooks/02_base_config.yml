@@ -23,18 +23,20 @@
       vars:
         interface_descriptions:
           Router1:
-            - interface e0/0
+            - interface g0/0/0.69
             - description Connection to Switch1
           Router2:
-            - interface et0/1
+            - interface g0/0/0.69
             - description Connection to Switch1
           Switch1:
-            - interface e0/0
+            - interface g1/0/1
             - description Connection to Router1
-            - interface e0/1
+            - interface g1/0/2
             - description Connection to Router2
-            - interface e0/2
-            - description Connection to Server
+            - interface g1/0/3
+            - description Connection to PC1
+            - interface g1/0/4
+            - description Connection to PC2
 
     # -------------------------
     # 3. Configure MOTD Banner
