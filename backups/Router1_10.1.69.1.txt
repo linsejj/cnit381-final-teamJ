@@ -1,0 +1,189 @@
+Building configuration...
+
+
+Current configuration : 2536 bytes
+!
+! Last configuration change at 12:59:12 CST Wed Dec 10 2025 by cisco
+! NVRAM config last updated at 12:58:33 CST Wed Dec 10 2025 by cisco
+!
+version 16.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+!
+hostname Router1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+logging buffered 16384
+enable password cisco
+!
+no aaa new-model
+clock timezone CST -6 0
+!
+no ip domain lookup
+ip domain name cnit381.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4331/K9 sn FLM24050AB7
+diagnostic bootup level minimal
+spanning-tree extend system-id
+!
+!
+!
+username cisco password 0 cisco
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback1
+ ip address 10.1.1.1 255.255.255.255
+!
+interface Loopback2
+ ip address 10.1.2.1 255.255.255.255
+!
+interface Loopback3
+ ip address 10.1.3.1 255.255.255.255
+!
+interface GigabitEthernet0/0/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/0/0.10
+ encapsulation dot1Q 10
+ ip address 10.1.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0/0.20
+ encapsulation dot1Q 20
+ ip address 10.1.20.1 255.255.255.0
+!
+interface GigabitEthernet0/0/0.30
+ encapsulation dot1Q 30
+ ip address 10.1.30.1 255.255.255.0
+!
+interface GigabitEthernet0/0/0.69
+ description Connection to Switch1
+ encapsulation dot1Q 69
+ ip address 10.1.69.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface Serial0/1/0
+!
+interface Serial0/1/1
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ shutdown
+ negotiation auto
+!
+!
+router eigrp 100
+ network 10.1.1.1 0.0.0.0
+ network 10.1.2.1 0.0.0.0
+ network 10.1.3.1 0.0.0.0
+ network 10.1.69.0 0.0.0.255
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+!
+logging trap debugging
+logging host 10.1.69.1
+!
+!
+!
+!
+control-plane
+!
+banner motd ^CUnauthorized access is prohibited^C
+!
+line con 0
+ logging synchronous
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+!
+ntp master 1
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
